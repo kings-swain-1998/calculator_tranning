@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
-import { evaluate } from "mathjs";
+import { evaluate, re } from "mathjs";
 
 function App() {
   const [firstNumber, setFirstNumber] = useState(0);
@@ -8,6 +8,8 @@ function App() {
   const [active, setActive] = useState(false);
   const [result, setResult] = useState(false);
   const [cal, setCal] = useState();
+  const number = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0, "."];
+  const calculation = ["/", "*", "-", "+"];
 
   const handleCal = (i) => {
     if (firstNumber.length > 1) {
@@ -52,14 +54,6 @@ function App() {
     setResult(false);
   };
 
-  const handelDisable = (i) => {
-    if (i === cal) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   const showResult = () => {
     setSecondNumber(firstNumber);
     setFirstNumber(evaluate(firstNumber));
@@ -81,6 +75,34 @@ function App() {
     }
   };
 
+  const showNumber = () => {
+    return number.map((numberItem, i) => {
+      return numberItem === 0 ? (
+        <button
+          className="keyboard_0"
+          onClick={() => handleNumber(numberItem)}
+          key={i}
+        >
+          {numberItem}
+        </button>
+      ) : (
+        <button
+          className="keyboard__number-btn"
+          onClick={() => handleNumber(numberItem)}
+          key={i}
+        >
+          {numberItem}
+        </button>
+      );
+    });
+  };
+
+  const showCalculation = () => {
+    return calculation.map((item, i) => {
+      return <button onClick={() => handleCal(item)}>{item}</button>;
+    });
+  };
+
   return (
     <div className="App">
       <div className="main">
@@ -89,34 +111,13 @@ function App() {
           <p>{firstNumber}</p>
         </div>
         <div className="keyboard">
+          <div className="keyboard__number">{showNumber()}</div>
           <button onClick={() => clearNumber()}>AC</button>
           <button onClick={() => cancelNumber()}>CE</button>
-          <button onClick={() => handleCal("/")} disabled={handelDisable("/")}>
-            /
-          </button>
-          <button onClick={() => handleCal("*")} disabled={handelDisable("*")}>
-            *
-          </button>
-          <button onClick={() => handleNumber(7)}>7</button>
-          <button onClick={() => handleNumber(8)}>8</button>
-          <button onClick={() => handleNumber(9)}>9</button>
-          <button onClick={() => handleCal("-")} disabled={handelDisable("-")}>
-            -
-          </button>
-          <button onClick={() => handleNumber(4)}>4</button>
-          <button onClick={() => handleNumber(5)}>5</button>
-          <button onClick={() => handleNumber(6)}>6</button>
-          <button onClick={() => handleCal("+")} disabled={handelDisable("+")}>
-            +
-          </button>
-          <button onClick={() => handleNumber(1)}>1</button>
-          <button onClick={() => handleNumber(2)}>2</button>
-          <button onClick={() => handleNumber(3)}>3</button>
-          <button onClick={showResult}>=</button>
-          <button className="keyboard_0" onClick={() => handleNumber(0)}>
-            0
-          </button>
-          <button onClick={() => handleNumber(".")}>.</button>
+          <div className="keyboard__main">
+            {showCalculation()}
+            <button onClick={showResult}>=</button>
+          </div>
         </div>
       </div>
     </div>
